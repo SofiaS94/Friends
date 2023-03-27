@@ -2,30 +2,25 @@
 require_once 'connec.php';
 $pdo = new \PDO(DSN, USER, PASS);
 $query = "SELECT * FROM friend";
-$statement = $pdo->query($query);
+$statement = $pdo->prepare($query);
+
+$statement->execute();
+
 $friends = $statement->fetchAll();
-
-// A exécuter afin d'afficher vos lignes déjà insérées dans la table friends
-$query = "SELECT * FROM friend";
-$statement = $pdo->query($query);
-$friends = $statement->fetchAll();
-
-
-// A exécuter afin de tester le contenu de votre table friend
-$query = "SELECT * FROM friend";
-$statement = $pdo->query($query);
-
-// On veut afficher notre résultat via un tableau associatif (PDO::FETCH_ASSOC)
-$friendsArray = $statement->fetchAll(PDO::FETCH_ASSOC);
 
 foreach ($friendsArray as $friend) {
     echo $friend['firstname'] . ' ' . $friend['lastname'];
 }
 
-// On veut afficher notre résultat via un tableau associatif (PDO::FETCH_OBJ)
+$query = "SELECT * FROM friend WHERE firstname=?";
+$statement = $pdo->prepare($query);
+$friendsArray = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+$statement = $pdo->prepare($query);
 $friendsObject = $statement->fetchAll(PDO::FETCH_OBJ);
 
 foreach ($friendsObject as $friend) {
     echo $friend->firstname . ' ' . $friend->lastname;
 }
+
 var_dump($friends);
